@@ -19,7 +19,6 @@ class Rules
      */
     public static function getRules(array $overwrittenRules = []): array
     {
-        /** @var array $base_rules */
         $baseRules = require __DIR__ . '/base_rules.php';
 
         return array_replace_recursive($baseRules, $overwrittenRules);
