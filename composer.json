@@ -1,0 +1,39 @@
+{
+  "name": "axazara/php-cs",
+  "description": "PHP Code Style rule (via PHP CS Fixer) applied to Axa Zara PHP projects.",
+  "license": "MIT",
+  "keywords": [
+    "PHP",
+    "style"
+  ],
+  "authors": [
+    {
+      "name": "AXa Zara Core Dev"
+    }
+  ],
+  "contributors": [
+    {
+      "name": "Elias Elimah"
+    }
+  ],
+  "require": {
+    "friendsofphp/php-cs-fixer": "^2.16"
+  },
+  "require-dev": {
+    "insolita/unused-scanner": "^2.4"
+  },
+  "autoload": {
+    "files": [
+      "./src/helpers.php"
+    ]
+  },
+  "scripts": {
+    "sniff": "vendor/bin/php-cs-fixer fix -vvv --dry-run --show-progress=dots",
+    "format": "vendor/bin/php-cs-fixer fix -v",
+    "test": [
+      "Composer\\Config::disableProcessTimeout",
+      "vendor/bin/phpunit --testdox"
+    ],
+    "unused": "vendor/bin/unused_scanner unused-scanner.php"
+  }
+}
