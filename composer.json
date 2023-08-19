@@ -1,39 +1,54 @@
 {
-  "name": "axazara/php-cs",
-  "description": "PHP Code Style rule (via PHP CS Fixer) applied to Axa Zara PHP projects.",
-  "license": "MIT",
-  "keywords": [
-    "PHP",
-    "style"
-  ],
-  "authors": [
-    {
-      "name": "AXa Zara Core Dev"
-    }
-  ],
-  "contributors": [
-    {
-      "name": "Elias Elimah"
-    }
-  ],
-  "require": {
-    "friendsofphp/php-cs-fixer": "^2.16"
-  },
-  "require-dev": {
-    "insolita/unused-scanner": "^2.4"
-  },
-  "autoload": {
-    "files": [
-      "./src/helpers.php"
-    ]
-  },
-  "scripts": {
-    "sniff": "vendor/bin/php-cs-fixer fix -vvv --dry-run --show-progress=dots",
-    "format": "vendor/bin/php-cs-fixer fix -v",
-    "test": [
-      "Composer\\Config::disableProcessTimeout",
-      "vendor/bin/phpunit --testdox"
+    "name": "axazara/php-cs",
+    "description": "Axa Zra PHP Code style configuration for `php-cs-fixer` based on PSR-12.",
+    "type": "package",
+    "license": "MIT",
+    "keywords": [
+        "php",
+        "php-cs-fixer",
+        "code-style"
     ],
-    "unused": "vendor/bin/unused_scanner unused-scanner.php"
-  }
+    "homepage": "https://axazara.com",
+    "authors": [
+        {
+            "name": "Axa Zara Core Dev"
+        }
+    ],
+    "contributors": [
+        {
+            "name": "Elias Elimah"
+        }
+    ],
+    "require": {
+        "php": "^8.0",
+        "friendsofphp/php-cs-fixer": "^3.23"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.3",
+        "phpstan/phpstan": "^1.10",
+        "mockery/mockery": "^1.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "AxaZara\\CS\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "post-root-package-install": [
+            "cp vendor/axazara/php-cs/.php-cs-fixer.dist.php .php-cs-fixer.dist.php"
+        ],
+        "analyse": "vendor/bin/phpstan analyse",
+        "sniff": "vendor/bin/php-cs-fixer fix -vvv --dry-run --show-progress=dots",
+        "format": "vendor/bin/php-cs-fixer fix -v",
+        "test": [
+            "Composer\\Config::disableProcessTimeout",
+            "vendor/bin/phpunit --testdox"
+        ],
+        "unused": "vendor/bin/unused_scanner unused-scanner.php"
+    }
 }

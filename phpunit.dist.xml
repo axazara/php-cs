@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.3/phpunit.xsd"
+         bootstrap="vendor/autoload.php" colors="true"
+         backupGlobals="false"
+         processIsolation="true"
+         executionOrder="random"
+         failOnEmptyTestSuite="true"
+         beStrictAboutOutputDuringTests="true"
+         stopOnDefect="true" stopOnWarning="true"
+         stopOnIncomplete="true" stopOnFailure="true"
+         stopOnSkipped="true"
+         stopOnError="true"
+         stopOnRisky="true"
+         cacheDirectory="build/phpunit/cache/phpunit.result.cache"
+         backupStaticProperties="false"
+>
+  <testsuites>
+    <testsuite name="Tests">
+      <directory suffix="Test.php">./tests</directory>
+    </testsuite>
+  </testsuites>
+  <coverage>
+    <report>
+      <html outputDirectory="build/phpunit/coverage"/>
+      <text outputFile="build/phpunit/coverage.cobertura.xml"/>
+      <clover outputFile="build/phpunit/logs/clover.xml"/>
+    </report>
+  </coverage>
+  <logging>
+    <junit outputFile="build/phpunit/report.junit.xml"/>
+  </logging>
+  <source>
+    <include>
+      <directory suffix="Test.php">./tests</directory>
+    </include>
+  </source>
+</phpunit>

@@ -1,5 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
+namespace AxaZara\CS;
+
 return [
     '@PSR12'                       => true,
     'array_indentation'            => true,

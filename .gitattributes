@@ -1,0 +1,7 @@
+tests/ export-ignore
+.editorconfig export-ignore
+.gitignore export-ignore
+.php-cs-fixer.dist.php export-ignore
+phpstan.neon.dist export-ignore
+phpunit.xml export-ignore
+.gitlab-ci.yml export-ignore

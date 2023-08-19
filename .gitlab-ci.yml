@@ -1,0 +1,148 @@
+image: php:8.1.0-fpm
+
+.init_ssh: &init_ssh |
+  eval $(ssh-agent -s)
+  ssh-add <(echo "$SSH_PRIVATE_KEY")
+  mkdir -p ~/.ssh
+  [[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+
+services:
+  - postgres:15-alpine
+
+variables:
+  POSTGRES_DB: moneroo
+  POSTGRES_USER: runner
+  POSTGRES_PASSWORD: password
+
+  DB_HOST: postgres
+  DB_PORT: 5432
+  DB_CONNECTION: pgsql
+  DB_DATABASE: $POSTGRES_DB
+  DB_USERNAME: $POSTGRES_USER
+  DB_PASSWORD: $POSTGRES_PASSWORD
+
+  XDEBUG_MODE: coverage
+
+before_script:
+  - apt-get -qq update
+  - apt-get -qq install zip unzip -y
+  - apt-get -qq install git libicu-dev libpq-dev libpng-dev libjpeg-dev libzip-dev libsqlite3-dev zlib1g-dev libfreetype6-dev libjpeg62-turbo-dev -y
+  - docker-php-ext-configure gd --with-freetype --with-jpeg
+  - docker-php-ext-install sockets pcntl gd pgsql pdo_pgsql pdo_mysql > /dev/null
+  - pecl install xdebug && docker-php-ext-enable xdebug
+  - php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+  - php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+  - composer require --dev phpunit/phpunit phpunit/php-code-coverage
+  - composer global require "squizlabs/php_codesniffer=*"
+  - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+  - echo "memory_limit=250M" >> /usr/local/etc/php/conf.d/docker-php-memlimit.ini
+
+stages:
+  - Build
+  - Code Quality
+  - Test
+  - Deploy
+
+composer:
+  stage: Build
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}-composer
+    paths:
+      - vendor/
+  script:
+    - composer install
+  artifacts:
+    expire_in: 1 day
+    paths:
+      - vendor/
+  except:
+    - release
+    - staging
+
+Code Style:
+  stage: Code Quality
+  script:
+    - vendor/bin/php-cs-fixer fix -vvv --dry-run --show-progress=dots
+  except:
+    - release
+    - staging
+
+Unused Package Scanner:
+  stage: Code Quality
+  dependencies:
+    - composer
+  script:
+    - vendor/bin/unused_scanner unused-scanner.php
+  except:
+    - release
+    - staging
+
+Unit Test:
+  stage: Test
+  coverage: '/^\s*Lines:\s*\d+.\d+\%/'
+  dependencies:
+    - composer
+  script:
+    - cp .env.example .env
+    - php artisan key:generate
+    - php artisan jwt:secret
+    - vendor/bin/phpunit --testdox --configuration phpunit.dist.xml --testsuite Unit
+  artifacts:
+    reports:
+      junit:
+        - build/phpunit/report.junit.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: build/phpunit/coverage.cobertura.xml
+  except:
+    - release
+    - staging
+
+Feature Test:
+  stage: Test
+  coverage: '/^\s*Lines:\s*\d+.\d+\%/'
+  dependencies:
+    - composer
+  script:
+    - cp .env.example .env
+    - php artisan key:generate
+    - php artisan jwt:secret
+    - vendor/bin/phpunit --configuration phpunit.dist.xml --testsuite Feature
+  artifacts:
+    reports:
+      junit:
+        - build/phpunit/report.junit.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: build/phpunit/coverage.cobertura.xml
+  except:
+    - release
+    - staging
+
+staging:
+  stage: Deploy
+  dependencies:
+    - composer
+  script:
+    - *init_ssh
+    - vendor/bin/envoy run deploy --env=staging
+  environment:
+    name: staging
+    url: https://moneroo.axaship.com
+  when: manual
+  only:
+    - staging
+
+production:
+  stage: Deploy
+  dependencies:
+    - composer
+  script:
+    - *init_ssh
+    - vendor/bin/envoy run deploy --env=production
+  environment:
+    name: production
+    url: https://moneroo.axazara.io
+  when: manual
+  only:
+    - release
