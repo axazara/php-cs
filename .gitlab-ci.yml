@@ -19,7 +19,7 @@ stages:
   - Build
   - Code Quality
   - Test
-  - Deploy
+  - Release
 
 composer:
   stage: Build
@@ -63,3 +63,19 @@ Unit Test:
       coverage_report:
         coverage_format: cobertura
         path: build/phpunit/coverage.cobertura.xml
+
+Release:
+  stage: Release
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
+  rules:
+      - if: $CI_COMMIT_TAG
+        when: never
+      - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  script:
+    - echo "running release job for $TAG"
+  release:
+    tag_name: 'v0.$CI_PIPELINE_IID'
+    description: 'v0.$CI_PIPELINE_IID'
+    ref: '$CI_COMMIT_SHA'
+  only:
+    - main
