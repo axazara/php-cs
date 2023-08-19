@@ -77,5 +77,3 @@ Release:
     tag_name: 'v0.$CI_PIPELINE_IID'
     description: 'v0.$CI_PIPELINE_IID'
     ref: '$CI_COMMIT_SHA'
-  only:
-    - main
