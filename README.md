@@ -1,5 +1,7 @@
 This package provides [php-cs-fixer](https://github.com/PHP-CS-Fixer/PHP-CS-Fixer) configuration applied in [Axa Zara](https://axazara.com/) PHP projects.
-This represents the standard code style applied within Axa Zara's PHP project.## Quickstart
+This represents the standard code style applied within Axa Zara's PHP project.
+
+## Quickstart
 
 ### Step 1 of 3
 
