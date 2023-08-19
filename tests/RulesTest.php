@@ -21,29 +21,28 @@ class RulesTest extends TestCase
     {
         $rules = Rules::getRules();
 
+        $this->assertIsArray($rules);
+
         // Check array-rule before replace
         $this->assertSame(
             [
-                'default'   => 'align_single_space_minimal',
                 'operators' => [
-                    '='  => 'align_single_space',
-                    '=>' => 'align_single_space',
+                    '=>' => 'align',
                 ],
             ],
             $rules['binary_operator_spaces']
         );
 
-        $overwritten_rules = ['binary_operator_spaces' => ['default' => 'foo']];
-        $rules = Rules::getRules($overwritten_rules);
+        $overwrittenRules = ['binary_operator_spaces' => ['default' => 'foo']];
+        $rules = Rules::getRules($overwrittenRules);
 
         // Check array-rule after replace
         $this->assertSame(
             [
-                'default'   => 'foo', // <-- Replaced rule
                 'operators' => [
-                    '='  => 'align_single_space',
-                    '=>' => 'align_single_space',
+                    '=>' => 'align',
                 ],
+                'default' => 'foo',
             ],
             $rules['binary_operator_spaces']
         );
