@@ -20,10 +20,10 @@
         }
     ],
     "require": {
-        "php": "^7.0 || ^8.0"
+        "php": "^7.0 || ^8.0",
+        "friendsofphp/php-cs-fixer": "^3.0"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^3.23",
         "phpunit/phpunit": "^10.3",
         "phpstan/phpstan": "^1.10",
         "mockery/mockery": "^1.6",
