@@ -1,6 +1,9 @@
 <?php
 
+namespace Tests;
+
 use AxaZara\CS\Config;
+use Mockery;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use PhpCsFixer\Config as PhpCsFixerConfig;
 use PhpCsFixer\Finder as PhpCsFixerFinder;

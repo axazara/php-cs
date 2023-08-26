@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests;
+
 use AxaZara\CS\Finder;
 use PhpCsFixer\Finder as PhpCsFixerFinder;
 use PHPUnit\Framework\TestCase;

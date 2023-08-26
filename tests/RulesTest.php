@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests;
+
 use AxaZara\CS\Rules;
 use PHPUnit\Framework\TestCase;
 
