@@ -25,7 +25,6 @@ class RulesTest extends TestCase
 
         $this->assertIsArray($rules);
 
-        // Check array-rule before replace
         $this->assertSame(
             [
                 'operators' => [
@@ -38,7 +37,6 @@ class RulesTest extends TestCase
         $overwrittenRules = ['binary_operator_spaces' => ['default' => 'foo']];
         $rules = Rules::getRules($overwrittenRules);
 
-        // Check array-rule after replace
         $this->assertSame(
             [
                 'operators' => [
@@ -48,5 +46,30 @@ class RulesTest extends TestCase
             ],
             $rules['binary_operator_spaces']
         );
+    }
+
+    public function test_excludes_rules(): void
+    {
+        $rules = Rules::getRules();
+
+        $this->assertIsArray($rules);
+
+        $this->assertSame(
+            [
+                'elements' => [
+                    'method'       => 'one',
+                    'property'     => 'one',
+                    'const'        => 'one',
+                    'trait_import' => 'one',
+                ],
+            ],
+            $rules['class_attributes_separation']
+        );
+
+        $excludedRules = ['class_attributes_separation'];
+
+        $rules = Rules::getRules([], $excludedRules);
+
+        $this->assertArrayNotHasKey('class_attributes_separation', $rules);
     }
 }

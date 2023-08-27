@@ -13,14 +13,27 @@ class Config
     /**
      * Creates a new Config.
      *
-     * @param array<string, array<string, mixed>|bool> $overwritten_rules
+     * @param array<string, array<string, mixed>|bool> $overwrittenRules - Rules to overwrite
+     * @param array<string, array<string, mixed>|bool> $excludedRules    - Rules to exclude from default rules (Useful for risky rules and PHP version specific rules)
+     * @param bool                                     $riskyAllowed     - Whether to allow risky rules
+     * @param bool                                     $usingCache       - Whether to use cache
+     * @param PhpCsFixerFinder                         $finder           - The finder instance
+     *
+     * @return ConfigInterface - The config instance
      */
-    public static function createWithFinder(PhpCsFixerFinder $finder, array $overwritten_rules = []): ConfigInterface
-    {
+    public static function createWithFinder(
+        PhpCsFixerFinder $finder,
+        array $overwrittenRules = [],
+        array $excludedRules = [],
+        bool $riskyAllowed = false,
+        bool $usingCache = false
+    ): ConfigInterface {
+        $rules = Rules::getRules($overwrittenRules, $excludedRules);
+
         return (new PhpCsFixerConfig())
             ->setFinder($finder)
-            ->setRules(Rules::getRules($overwritten_rules))
-            ->setRiskyAllowed(false)
-            ->setUsingCache(false);
+            ->setRules($rules)
+            ->setRiskyAllowed($riskyAllowed)
+            ->setUsingCache($usingCache);
     }
 }

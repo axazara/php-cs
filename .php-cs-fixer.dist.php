@@ -2,10 +2,16 @@
 
 declare(strict_types=1);
 
-use AxaZara\CS\Finder;
 use AxaZara\CS\Config;
+use AxaZara\CS\Finder;
 
 // Routes for analysis with `php-cs-fixer`
 $routes = ['./src', './tests'];
 
-return Config::createWithFinder(Finder::createWithRoutes($routes));
+return Config::createWithFinder(
+    finder: Finder::createWithRoutes($routes),
+    overwrittenRules: [],
+    excludedRules: [],
+    riskyAllowed: false,
+    usingCache: false
+);
