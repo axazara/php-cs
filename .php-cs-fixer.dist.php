@@ -9,9 +9,9 @@ use AxaZara\CS\Finder;
 $routes = ['./src', './tests'];
 
 return Config::createWithFinder(
-    finder: Finder::createWithRoutes($routes),
-    overwrittenRules: [],
-    excludedRules: [],
-    riskyAllowed: false,
-    usingCache: false
+    Finder::createWithRoutes($routes),
+    [],
+    [],
+    false,
+    false
 );
