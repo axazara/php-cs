@@ -24,7 +24,7 @@ return [
             '=>' => 'align',
         ],
     ],
-    'curly_braces_position'                   => true,
+    'braces_position'                         => true,
     'blank_line_after_opening_tag'            => true,
     'single_space_around_construct'           => true,
     'control_structure_braces'                => true,
