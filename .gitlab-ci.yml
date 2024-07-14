@@ -74,6 +74,7 @@ Unit Test PHP 8.3:
 Release:
   stage: Release
   image: registry.gitlab.com/gitlab-org/release-cli:latest
+  before_script: []
   rules:
     - if: $CI_COMMIT_TAG
   script:
