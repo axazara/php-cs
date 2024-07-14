@@ -5,11 +5,6 @@ namespace Tests;
 use AxaZara\CS\Rules;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @todo Tests are incomplete
- *
- * @covers \AxaZara\CS\Rules::getRules
- */
 class RulesTest extends TestCase
 {
     public function test_method_return_array(): void
