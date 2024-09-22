@@ -12,6 +12,6 @@ return Config::createWithFinder(
     Finder::createWithRoutes($routes),
     [],
     [],
-    false,
+    true,
     false
 );
