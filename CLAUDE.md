@@ -2,6 +2,60 @@
 
 Guidance for Claude Code and other AI agents working in this repository.
 
+## Project overview
+
+`axazara/php-cs` is a Composer package that provides a shared `php-cs-fixer` configuration for all Axa Zara PHP projects. It ships three classes (`Config`, `Finder`, `Rules`) and two rule-set files (`base_rules.php`, `risk_rules.php`) that other projects pull in as a dev dependency. The package is the single source of truth for PSR-12-based code style across the organisation.
+
+## Tech stack
+
+- PHP 7.4 or 8.x (^7.4 || ^8.0); CI runs on PHP 8.3
+- `friendsofphp/php-cs-fixer` ^3.34 — the underlying formatter
+- PHPUnit ^9/^10/^11 — unit tests
+- PHPStan ^1.10 (level max) — static analysis
+- Mockery ^1.6 — test doubles
+- `insolita/unused-scanner` ^2.4 — dead-dependency detection
+
+## Getting started
+
+```bash
+composer install
+```
+
+No `.env` file or database is required; this is a library-only package.
+
+## Common commands
+
+| Task | Command |
+|---|---|
+| Test | `composer test` |
+| Lint check (dry-run) | `composer sniff` |
+| Auto-format | `composer format` |
+| Static analysis | `composer analyse` |
+| Unused dependency scan | `composer unused` |
+
+## Architecture
+
+```
+src/
+  Config.php        — factory: creates a PhpCsFixer\Config wired with finder + rules
+  Finder.php        — factory: wraps PhpCsFixer\Finder, scans *.php, ignores *.blade.php
+  Rules.php         — merges base_rules + optional risk_rules, supports rule exclusion
+  base_rules.php    — non-risky ruleset (PSR-12 + ~60 additional fixers)
+  risk_rules.php    — opt-in risky fixers (enabled via $riskyAllowed flag)
+tests/              — PHPUnit tests for Config, Finder, and Rules (one file per class)
+```
+
+Consumers install the package, copy the generated `.php-cs-fixer.dist.php` stub into their project root, adjust the `$routes` array, and run `php-cs-fixer` against it. Custom rules can be passed as overrides or exclusions at construction time.
+
+## Conventions
+
+- All source files use `declare(strict_types=1)`.
+- The package applies its own ruleset to itself — run `composer sniff` before committing to catch style violations.
+- PHPStan is configured at `level: max` covering `src/` only; analysis failures are non-blocking in CI (`continue-on-error: true`) but should still be investigated.
+- PHPUnit is configured with `processIsolation=true`, randomised execution order, and strict stop-on-defect flags — tests must be fully isolated.
+- Risky fixers are opt-in: pass `$riskyAllowed = true` to `Config::createWithFinder()` to enable `risk_rules.php`.
+- Tags prefixed with `v` trigger an automated GitHub Release with generated release notes.
+
 ## Git Conventions
 
 ### 1. Branch names
