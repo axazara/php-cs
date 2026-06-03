@@ -14,7 +14,7 @@ class Config
      * Creates a new Config.
      *
      * @param array<string, array<string, mixed>|bool> $overwrittenRules - Rules to overwrite
-     * @param array<string, array<string, mixed>|bool> $excludedRules - Rules to exclude from default rules (Useful for risky rules and PHP version specific rules)
+     * @param array<int, string> $excludedRules - Names of rules to exclude from the default set (useful for risky rules and PHP version specific rules)
      * @param bool $riskyAllowed - Whether to allow risky rules
      * @param bool $usingCache - Whether to use cache
      * @param PhpCsFixerFinder $finder - The finder instance

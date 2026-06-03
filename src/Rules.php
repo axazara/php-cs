@@ -13,10 +13,10 @@ namespace AxaZara\CS;
 class Rules
 {
     /**
-     * @param array<string, array<string, mixed>|bool|string> $overwrittenRules - Rules to overwrite
-     * @param array<int|string, array<string, mixed>|bool|string> $excludedRules - Rules to exclude from default rules (Useful for risky rules and PHP version specific rules)
+     * @param array<string, array<string, mixed>|bool> $overwrittenRules - Rules to overwrite
+     * @param array<int, string> $excludedRules - Names of rules to exclude from the default set (useful for risky rules and PHP version specific rules)
      *
-     * @return array<string, array<string, mixed>|bool|string>
+     * @return array<string, array<string, mixed>|bool>
      */
     public static function getRules(array $overwrittenRules = [], array $excludedRules = [], bool $riskyAllowed = false): array
     {
