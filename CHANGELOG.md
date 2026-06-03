@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - PHPUnit no longer reports "No tests executed" when running with `coverage: none`. The coverage report block in `phpunit.dist.xml` required a coverage driver; combined with `stopOnWarning`, the missing-driver warning aborted the run before any test executed. Coverage configuration has been removed from the default config so the suite runs in CI again.
+- Dropped `--ignore-platform-reqs` from the CI `composer install`. The flag pulled in `symfony/console` 8.x (which requires PHP 8.4) on the PHP 8.3 runner, causing a parse error in the Code Style job. Composer now resolves dependencies against the runner's PHP version.
 - Corrected the PHPDoc types on `Rules::getRules()` and `Config::createWithFinder()` so PHPStan (level max) passes: rule values are `array|bool` and `$excludedRules` is a list of rule names.
 
 ## [0.3] - 2024-09-22
