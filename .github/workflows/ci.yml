@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: ['**']
+    branches: [main, release, staging]
     tags: ['v*']
   pull_request:
 
@@ -27,11 +27,10 @@ jobs:
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: ${{ runner.os }}-composer-
       - run: composer install --prefer-dist --no-progress --no-interaction
-      - uses: actions/upload-artifact@v4
+      - uses: actions/cache/save@v4
         with:
-          name: vendor
           path: vendor
-          retention-days: 1
+          key: ${{ runner.os }}-vendor-${{ github.run_id }}
 
   code-style:
     name: Code Style
@@ -44,10 +43,11 @@ jobs:
           php-version: '8.3'
           tools: composer:v2
           coverage: none
-      - uses: actions/download-artifact@v4
+      - uses: actions/cache/restore@v4
         with:
-          name: vendor
           path: vendor
+          key: ${{ runner.os }}-vendor-${{ github.run_id }}
+          fail-on-cache-miss: true
       - run: chmod +x vendor/bin/*
       - run: vendor/bin/php-cs-fixer fix --dry-run --diff --verbose
 
@@ -63,10 +63,11 @@ jobs:
           php-version: '8.3'
           tools: composer:v2
           coverage: none
-      - uses: actions/download-artifact@v4
+      - uses: actions/cache/restore@v4
         with:
-          name: vendor
           path: vendor
+          key: ${{ runner.os }}-vendor-${{ github.run_id }}
+          fail-on-cache-miss: true
       - run: chmod +x vendor/bin/*
       - run: vendor/bin/phpstan analyse --no-progress --memory-limit=1G
 
@@ -81,10 +82,11 @@ jobs:
           php-version: '8.3'
           tools: composer:v2
           coverage: none
-      - uses: actions/download-artifact@v4
+      - uses: actions/cache/restore@v4
         with:
-          name: vendor
           path: vendor
+          key: ${{ runner.os }}-vendor-${{ github.run_id }}
+          fail-on-cache-miss: true
       - run: chmod +x vendor/bin/*
       - run: vendor/bin/phpunit --testdox
 
